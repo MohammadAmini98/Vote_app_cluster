@@ -1,4 +1,5 @@
-# Vote_app_cluster
+# Vote_App_Cluster
+
 This repository is based on the [example-voting-app](https://github.com/dockersamples/example-voting-app) project, with the following additional features:
 
 - PostgreSQL database cluster
@@ -20,8 +21,7 @@ The architecture sets up a high-availability PostgreSQL cluster using Patroni, w
 
 - **etcd cluster**: Consists of three nodes (etcd1, etcd2, etcd3) to ensure synchronization among the Patroni nodes.
 - **Patroni nodes**: Three instances (patroni1, patroni2, patroni3) manage the PostgreSQL cluster.
-- **HAProxy**: Handles client traffic distribution across the Patroni-managed PostgreSQL instances, labeled as `db` in the architecture
-
+- **HAProxy**: Handles client traffic distribution across the Patroni-managed PostgreSQL instances, labeled as `db` in the architecture.
 
 ## Redis Cluster
 
@@ -29,4 +29,17 @@ In this project, we've implemented a Redis master-slave replication setup, where
 
 ### What Was the Best Solution?
 
-For a more robust and fault-tolerant Redis setup, the best practice is to use Redis Cluster. Redis Cluster allows for data sharding across multiple master nodes, each handling a portion of the data, and provides automatic failover and rebalancing. In the event of a master node failure, Redis Cluster promotes one of the replica nodes to master, ensuring minimal disruption. This architecture offers high availability and horizontal scalability, handling both read and write operations efficiently across the cluster, making it a more resilient and scalable solution compared to a simple master-slave configuration..
+For a more robust and fault-tolerant Redis setup, the best practice is to use Redis Cluster. Redis Cluster allows for data sharding across multiple master nodes, each handling a portion of the data, and provides automatic failover and rebalancing. In the event of a master node failure, Redis Cluster promotes one of the replica nodes to master, ensuring minimal disruption. This architecture offers high availability and horizontal scalability, handling both read and write operations efficiently across the cluster, making it a more resilient and scalable solution compared to a simple master-slave configuration.
+
+## Monitoring
+
+The monitoring solution employs Prometheus for collecting metrics, Grafana for visualizing those metrics, Redis Exporter for monitoring Redis, and PostgreSQL Exporter for tracking PostgreSQL performance. It sets up specific networks for service isolation and uses volumes for persistent data storage.
+
+## Logging
+
+The logging solution deploys a stack with Elasticsearch for data storage, Kibana for visualization, and Logstash for log processing. Elasticsearch and Logstash are connected to multiple networks for handling logs, while Kibana depends on Elasticsearch and Logstash for data display. The Logstash configuration is managed externally, and Kibana logs are sent via GELF.
+
+## Backup
+
+The backup solution schedules hourly backups using a cron job in an Alpine container. This container mounts a backup script and necessary volumes, executes the script every hour to back up PostgreSQL and Redis data, and stores the backups in a specified volume. The container is connected to both frontend and backend networks and uses the Docker socket for interacting with other containers.
+
