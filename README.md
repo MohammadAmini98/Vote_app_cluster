@@ -42,4 +42,6 @@ The logging solution deploys a stack with Elasticsearch for data storage, Kibana
 ## Backup
 
 The backup solution schedules hourly backups using a cron job in an Alpine container. This container mounts a backup script and necessary volumes, executes the script every hour to back up PostgreSQL and Redis data, and stores the backups in a specified volume. The container is connected to both frontend and backend networks and uses the Docker socket for interacting with other containers.
+# Deploy
 
+```docker stack deploy -c elk.yml vote
