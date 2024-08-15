@@ -1,0 +1,55 @@
+version: "3.9"
+services:
+  
+  prometheus:
+    image: docker.dc.afranet.co/prom/prometheus:main
+    networks:
+      - monitoring 
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml 
+      - prometheus-data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+
+  grafana:
+    image: docker.dc.afranet.co/grafana/grafana:main
+    networks:
+      - monitoring 
+    ports:
+      - "3000:3000"
+    environment:
+      GF_SECURITY_ADMIN_PASSWORD: "admin"  # Set this to a secure password
+    depends_on:
+      - prometheus
+
+  redis_exporter:
+    image: docker.dc.afranet.co/bitnami/redis-exporter:1
+    networks:
+      - frontend
+      - monitoring
+    environment:
+      - REDIS_ADDR=redis:6379
+
+  postgres_exporter:
+    image: docker.dc.afranet.co/bitnami/postgres-exporter:0.15.0
+    container_name: postgres_exporter
+    networks:
+      - backend
+      - monitoring
+    environment:
+      - DATA_SOURCE_NAME=postgresql://postgres:postgres@db:5432/postgres?sslmode=disable # No credentials
+
+volumes:
+  prometheus-config:
+    external: false
+  prometheus-data:
+    external: false
+networks:
+  frontend:
+    attachable: true
+  backend:
+    attachable: true
+  monitoring:
+    attachable: true

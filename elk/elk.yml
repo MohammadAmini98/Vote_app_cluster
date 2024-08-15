@@ -1,0 +1,55 @@
+version: '3'
+services:
+
+  elasticsearch:
+    image: docker.dc.afranet.co/library/elasticsearch:7.9.1
+    environment:
+      - discovery.type=single-node
+    networks:
+      - frontend
+      - monitoring 
+
+  kibana:
+    image: docker.dc.afranet.co/library/kibana:7.9.1
+    ports:
+      - 5601:5601
+    depends_on:
+      - elasticsearch
+      - logstash
+    logging:
+      driver: gelf
+      options:
+        gelf-address: "udp://localhost:12201"
+        tag: "demo2_kibana"
+    networks:
+      - monitoring
+
+
+  logstash:
+    image: docker.dc.afranet.co/library/logstash:7.9.1
+    links:
+      - elasticsearch
+    hostname: logstash
+    configs:
+      - source: logstash-config 
+        target: /etc/logstash/logstash.conf
+    command: logstash -f /etc/logstash/logstash.conf
+    depends_on:
+      - elasticsearch
+    networks:
+      - frontend
+      - backend
+      - monitoring 
+configs:
+  logstash-config:
+    external: true
+
+networks:
+  frontend:
+    attachable: true
+  backend:
+    attachable: true
+  monitoring:
+    attachable: true
+
+

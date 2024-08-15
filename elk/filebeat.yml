@@ -1,0 +1,12 @@
+# Filebeat configuration file
+
+filebeat.inputs:
+- type: log
+  paths:
+    - /var/log/redis/redis-server.log
+  fields:
+    log_type: redis
+
+output.logstash:
+  hosts: ["logstash:5044"]
+

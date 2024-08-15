@@ -1,0 +1,4 @@
+# Logstash configuration file
+
+http.host: "0.0.0.0"
+
