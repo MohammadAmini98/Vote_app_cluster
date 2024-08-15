@@ -1,0 +1,11 @@
+[ubuntu_vms]
+vm1 ansible_host=
+vm2 ansible_host=
+vm3 ansible_host=
+vm4 ansible_host=
+
+
+
+[ubuntu_vms:vars]
+ansible_user=ubuntu
+ansible_ssh_private_key_file=~/.ssh/id_rsa 

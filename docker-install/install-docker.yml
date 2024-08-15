@@ -1,0 +1,54 @@
+---
+- name: Install Docker on Ubuntu VMs
+  hosts: all
+  become: true
+
+  tasks:
+
+    - name: Ensure DNS servers are configured
+      lineinfile:
+         path: /etc/resolv.conf
+         regexp: '^nameserver'
+         line: 'nameserver {{ item }}'
+         state: present
+      with_items:
+         - 127.0.0.53
+
+    - name: Update apt package index
+      apt:
+        update_cache: yes
+
+    - name: Install packages to allow apt to use a repository over HTTPS
+      apt:
+        name: 
+          - apt-transport-https
+          - ca-certificates
+          - curl
+          - software-properties-common
+        state: present
+
+    - name: Add Docker’s official GPG key
+      apt_key:
+        url: https://download.docker.com/linux/ubuntu/gpg
+        state: present
+
+    - name: Add Docker APT repository
+      apt_repository:
+        repo: deb [arch=amd64] https://download.docker.com/linux/ubuntu {{ ansible_distribution_release }} stable
+        state: present
+
+    - name: Update the apt package index again
+      apt:
+        update_cache: yes
+
+    - name: Install Docker CE
+      apt:
+        name: docker-ce
+        state: present
+
+    - name: Ensure Docker service is started and enabled
+      systemd:
+        name: docker
+        enabled: yes
+        state: started
+
