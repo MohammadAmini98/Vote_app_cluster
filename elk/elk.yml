@@ -2,7 +2,7 @@ version: '3'
 services:
 
   elasticsearch:
-    image: docker.dc.afranet.co/library/elasticsearch:7.9.1
+    image: elasticsearch:7.9.1
     environment:
       - discovery.type=single-node
     networks:
@@ -10,7 +10,7 @@ services:
       - monitoring 
 
   kibana:
-    image: docker.dc.afranet.co/library/kibana:7.9.1
+    image: kibana:7.9.1
     ports:
       - 5601:5601
     depends_on:
@@ -26,7 +26,7 @@ services:
 
 
   logstash:
-    image: docker.dc.afranet.co/library/logstash:7.9.1
+    image: logstash:7.9.1
     links:
       - elasticsearch
     hostname: logstash

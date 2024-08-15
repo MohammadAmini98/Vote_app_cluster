@@ -2,7 +2,7 @@ version: "3.9"
 services:
   
   prometheus:
-    image: docker.dc.afranet.co/prom/prometheus:main
+    image: prom/prometheus:main
     networks:
       - monitoring 
     ports:
@@ -14,7 +14,7 @@ services:
       - '--config.file=/etc/prometheus/prometheus.yml'
 
   grafana:
-    image: docker.dc.afranet.co/grafana/grafana:main
+    image: grafana/grafana:main
     networks:
       - monitoring 
     ports:
@@ -25,7 +25,7 @@ services:
       - prometheus
 
   redis_exporter:
-    image: docker.dc.afranet.co/bitnami/redis-exporter:1
+    image: bitnami/redis-exporter:1
     networks:
       - frontend
       - monitoring
@@ -33,7 +33,7 @@ services:
       - REDIS_ADDR=redis:6379
 
   postgres_exporter:
-    image: docker.dc.afranet.co/bitnami/postgres-exporter:0.15.0
+    image: bitnami/postgres-exporter:0.15.0
     container_name: postgres_exporter
     networks:
       - backend

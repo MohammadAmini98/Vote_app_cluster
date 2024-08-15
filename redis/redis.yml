@@ -1,7 +1,7 @@
 version: "3.9"
 services:
   redis:
-    image: docker.dc.afranet.co/library/redis:7.4.0
+    image: redis:7.4.0
     networks:
       - frontend
     volumes:
@@ -13,7 +13,7 @@ services:
         gelf-address: "udp://localhost:12201"
         tag: "redis-master"
   redis-slave1:
-    image: docker.dc.afranet.co/library/redis:7.4.0
+    image: redis:7.4.0
     container_name: redis-slave1
     environment:
       - REDIS_MASTER_HOST=redis
@@ -30,7 +30,7 @@ services:
         tag: "redis-slave1"
 
   redis-slave2:
-    image: docker.dc.afranet.co/library/redis:7.4.0
+    image: redis:7.4.0
     container_name: redis-slave2
     environment:
       - REDIS_MASTER_HOST=redis
@@ -39,7 +39,7 @@ services:
     networks:
       - frontend
     volumes:
-      - redis-slave2-data:/data  # Separate volume for slave2 data
+      - redis-slave2-data:/data  
     logging:
       driver: gelf
       options:

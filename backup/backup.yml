@@ -1,12 +1,12 @@
 version: "3.9"
 services:
   backup:
-    image: docker.dc.afranet.co/library/alpine:3.20
+    image: alpine:3.20
     container_name: backup-cron
     volumes:
       - ./backup.sh:/backup.sh
       - ./backup:/backup
-      - /var/run/docker.sock:/var/run/docker.sock  # To run docker commands inside the container
+      - /var/run/docker.sock:/var/run/docker.sock  
     entrypoint: ["/bin/sh", "-c", "crond -l 2 -f"]
     command: |
       echo "0 * * * * /backup.sh >> /var/log/cron.log 2>&1" | crontab -
