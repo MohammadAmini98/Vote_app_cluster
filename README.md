@@ -25,11 +25,13 @@ The architecture sets up a high-availability PostgreSQL cluster using Patroni, w
 - **etcd cluster**: Consists of three nodes (etcd1, etcd2, etcd3) to ensure synchronization among the Patroni nodes.
 - **Patroni nodes**: Three instances (patroni1, patroni2, patroni3) manage the PostgreSQL cluster.
 - **HAProxy**: Handles client traffic distribution across the Patroni-managed PostgreSQL instances, labeled as `db` in the architecture.
-
+```
 docker stack deploy -c  postgres/postgres.yml vote
+```
 ## Redis Cluster
 
 In this project, we've implemented a Redis master-slave replication setup, where Redis operates with a single master and two slave nodes to provide read redundancy and load distribution. While the ideal setup for high availability and fault tolerance would involve a Redis Sentinel or Cluster configuration with multi-master support, our choice of this architecture is driven by the constraints of the prebuilt application in use, which does not handle multi-master Redis clusters. We acknowledge that a more robust solution would involve Redis Cluster for true high availability and fault tolerance, but the current configuration aligns with the capabilities and requirements of the existing application.
+
 
 ```
 docker stack deploy -c  redis/redis.yml vote
