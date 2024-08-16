@@ -65,3 +65,5 @@ The backup solution schedules hourly backups using a cron job in an Alpine conta
 docker stack deploy -c  backup/backup.yml vote
 ```
 
+## considerations
+- the provided manifests are considered for a test environment, so credential management are not provided. For the production environment, all databases must have credentials in a secured manner.
