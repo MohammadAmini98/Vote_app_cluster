@@ -120,7 +120,7 @@ networks:
 volumes:
   postgres-data:
 
-configs:
-  haproxy_cfg:
-    external: true
+# configs:
+#  haproxy_cfg:
+#   external: true
 
